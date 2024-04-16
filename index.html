@@ -1,0 +1,83 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <link rel="shortcut icon" type="image/svg+xml" href="favicon.svg" />
+    <link rel="stylesheet" href="utils/main.css" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Roboto:400,700"
+      rel="stylesheet"
+      type="text/css"
+    />
+
+    <!-- Set the text that will show up in the browser tab preview text -->
+    <title>Story Time!</title>
+
+    <!-- Set the preview image that shows when you share the link -->
+    <meta property="og:image" content="https://cdn-apabk.nitrocdn.com/QQUvjmPGpOGmpUxCkqAsSnVUjfEULAuk/assets/images/optimized/rev-cd1fa0c/icebreakerideas.com/wp-content/uploads/2023/07/Bedtime-Stories-for-Kids.jpg" />
+    
+    <!-- Set the page to dynamically update based on device width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head>
+
+  <body>
+    <header>Story Generator</header>
+
+    <div class="form-container">
+      <form id="name-form">
+        Character Names: <input type="text" id="characters" placeholder="Separated by commas"><br><br>
+        Setting: <input type="text" id="setting" placeholder="Enter a location"><br><br>
+        Key Story Elements:  <input type="text" id="story-elements" placeholder="Try 'unicorns' or 'magic'"><br><br>
+        <button type="submit">Submit</button>
+      </form>
+    </div>
+    
+    <div class="container">
+      <blockquote id="result"></blockquote>
+    </div>
+
+
+    <script type="module">
+      import {
+        getGenerativeModel,
+        fileToGenerativePart,
+        updateUI,
+      } from "./utils/shared.js";
+      
+      //create a function run() which takes in a prompt, passes it to the gemini model, and returns the result
+      async function run(prompt) { 
+
+        const model = await getGenerativeModel({
+          model: "gemini-pro", //set the model to gemini-pro
+        });
+
+        //generate content from the model and the prompt
+        return model.generateContentStream(prompt);
+      }
+
+      document
+        .querySelector("#name-form")
+        .addEventListener("submit", async (event) => {
+          event.preventDefault();
+
+          //After user hits submit (see listener above), retrieve their input values and store them as variables
+          const characters = document.querySelector("#characters").value;
+          const setting = document.querySelector("#setting").value;
+          const storyElements = document.querySelector("#story-elements").value;
+
+          //Write your prompt, including placeholders for the user's inputs
+          const finalPrompt =  "Tell me a 3 paragraph story with characters: " + characters 
+            + " and setting: " + setting 
+            + ". Also, please make sure to include the following things in the story: " + storyElements;
+          
+          //Run the function you created above, passing in the prompt; Note that this uses the updateUI function which is imported above
+          const resultElement = document.querySelector("#result"); //create resultElement variable that points to the result placeholder (defined in above HTML)
+          updateUI(
+            resultElement,
+            () => run(finalPrompt),  //pass in finalPrompt you created above
+            true,
+          );
+        });
+    </script>
+  </body>
+</html>
