@@ -21,7 +21,7 @@ import path from "path";
 import url from "url";
 
 // Local port for http server to listen on
-const PORT = 9000;
+const PORT = 8080;
 
 // Get your API key from https://makersuite.google.com/app/apikey
 // Access your API key as an environment variable
@@ -83,5 +83,5 @@ http
   .listen(parseInt(PORT));
 
 console.log(
-  `Server listening. Pages:\n - http://localhost:${PORT}\n - http://localhost:${PORT}/chat.html`,
+  `Server listening. Pages:\n - http://localhost:${PORT}\n`,
 );
